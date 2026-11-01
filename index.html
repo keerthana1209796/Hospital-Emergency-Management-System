@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Educational Hospital Emergency Management System using Priority Queue.">
+  <title>Hospital Emergency Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">✚</div>
+        <div><strong>CareQueue</strong><span>Emergency Desk</span></div>
+      </div>
+      <div class="side-label">WORKSPACE</div>
+      <nav>
+        <a class="nav-link active" href="#dashboard"><span>▦</span> Dashboard</a>
+        <a class="nav-link" href="#add-patient"><span>＋</span> Add Patient</a>
+        <a class="nav-link" href="#waiting-list"><span>☷</span> Waiting Queue</a>
+        <a class="nav-link" href="#search-patient"><span>⌕</span> Search Patient</a>
+      </nav>
+      <div class="sidebar-note">
+        <div class="note-icon">ⓘ</div>
+        <strong>Priority Queue</strong>
+        <p>Patients are ordered by emergency priority. Priority 1 is treated first.</p>
+      </div>
+      <div class="sidebar-footer"><span class="status-dot"></span> Demo system active</div>
+    </aside>
+
+    <main class="main-content" id="dashboard">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">HOSPITAL OPERATIONS</p>
+          <h1>Emergency Management</h1>
+          <p class="subheading">Manage patient flow with priority-based care.</p>
+        </div>
+        <div class="top-actions">
+          <span class="today-pill" id="todayLabel">Today</span>
+          <div class="avatar">ED</div>
+        </div>
+      </header>
+
+      <section class="notice">
+        <span class="notice-symbol">✦</span>
+        <div><strong>Priority Queue System</strong><p>Critical cases (Priority 1) are placed ahead of serious and normal cases.</p></div>
+        <span class="notice-tag">C • DATA STRUCTURES</span>
+      </section>
+
+      <section class="stats-grid" aria-label="Patient statistics">
+        <article class="stat-card">
+          <div class="stat-top"><span>Total Waiting</span><span class="stat-icon blue">☷</span></div>
+          <strong id="totalWaiting">0</strong><small>Patients in queue</small>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>Critical</span><span class="stat-icon red">＋</span></div>
+          <strong id="criticalCount">0</strong><small>Priority 1 · Critical</small>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>Serious</span><span class="stat-icon amber">＋</span></div>
+          <strong id="seriousCount">0</strong><small>Priority 2 · Serious</small>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>Normal</span><span class="stat-icon green">＋</span></div>
+          <strong id="normalCount">0</strong><small>Priority 3 · Normal</small>
+        </article>
+      </section>
+
+      <div class="content-grid">
+        <section class="panel add-panel" id="add-patient">
+          <div class="panel-heading">
+            <div><p class="eyebrow">PATIENT REGISTRATION</p><h2>Add New Patient</h2></div>
+            <span class="heading-icon">＋</span>
+          </div>
+          <form id="patientForm">
+            <label for="patientId">Patient ID</label>
+            <input id="patientId" name="patientId" placeholder="e.g. 101" required maxlength="20">
+            <label for="patientName">Patient Name</label>
+            <input id="patientName" name="patientName" placeholder="Enter patient name" required maxlength="60">
+            <label for="priority">Emergency Priority</label>
+            <select id="priority" name="priority" required>
+              <option value="1">Priority 1 — Critical</option>
+              <option value="2">Priority 2 — Serious</option>
+              <option value="3" selected>Priority 3 — Normal</option>
+            </select>
+            <button class="primary-btn" type="submit">＋ Add to Waiting Queue</button>
+            <p class="form-hint">The queue automatically places higher-priority patients first.</p>
+          </form>
+        </section>
+
+        <section class="panel treat-panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">NEXT IN LINE</p><h2>Next Patient</h2></div>
+            <span class="heading-icon heart">♡</span>
+          </div>
+          <div id="nextPatient" class="next-patient empty-state">
+            <div class="empty-icon">＋</div><strong>No patients waiting</strong><p>Add a patient to see who is next.</p>
+          </div>
+          <button id="treatBtn" class="treat-btn" disabled>✓ Mark as Treated</button>
+          <p class="form-hint center">Removes the highest-priority patient from the queue.</p>
+          <div id="treatedMessage" class="inline-message" role="status"></div>
+        </section>
+      </div>
+
+      <section class="panel queue-panel" id="waiting-list">
+        <div class="panel-heading queue-heading">
+          <div><p class="eyebrow">LIVE PATIENT FLOW</p><h2>Waiting Patients</h2></div>
+          <div class="queue-tools"><span class="count-pill" id="queueCount">0 patients</span><button class="text-btn" id="clearBtn" type="button">Clear demo queue</button></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>QUEUE</th><th>PATIENT ID</th><th>PATIENT NAME</th><th>PRIORITY</th><th>STATUS</th></tr></thead>
+            <tbody id="queueBody"><tr><td colspan="5" class="table-empty">No patients in the waiting queue yet.</td></tr></tbody>
+          </table>
+        </div>
+        <div class="priority-legend">
+          <span><i class="legend-dot critical"></i> 1 Critical</span>
+          <span><i class="legend-dot serious"></i> 2 Serious</span>
+          <span><i class="legend-dot normal"></i> 3 Normal</span>
+        </div>
+      </section>
+
+      <section class="panel search-panel" id="search-patient">
+        <div class="panel-heading">
+          <div><p class="eyebrow">RECORD LOOKUP</p><h2>Search Patient</h2></div>
+          <span class="heading-icon">⌕</span>
+        </div>
+        <form id="searchForm" class="search-form">
+          <input id="searchId" placeholder="Enter Patient ID to search" aria-label="Patient ID to search">
+          <button class="secondary-btn" type="submit">Search Patient</button>
+        </form>
+        <div id="searchResult" class="search-result" aria-live="polite">Search by Patient ID to view a patient's current queue status.</div>
+      </section>
+
+      <footer class="footer">
+        <span>CareQueue · Hospital Emergency Management System</span>
+        <span>Academic demonstration · Priority Queue in C concept</span>
+      </footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
